@@ -14,9 +14,39 @@ document.getElementById('generateButton').addEventListener('click', function() {
 });
 
 document.getElementById('saveButton').addEventListener('click', function() {
+    var email = document.getElementById('emailInput').value.trim();
     var content = document.getElementById('result').value;
-    downloadToFile(content, 'gmail-variations.txt', 'text/plain');
+
+    if (!email) {
+        alert('Please enter your Gmail username.');
+        return;
+    }
+
+    if (!content) {
+        alert('Please generate emails first.');
+        return;
+    }
+
+    // Appending '@gmail.com' if not present
+    if (!email.endsWith('@gmail.com')) {
+        email += '@gmail.com';
+    }
+
+    var filename = email + ' generated emails.txt';
+
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
 });
+
+
 
 function generateGmailVariations(email, useDotTrick, usePlusTrick, numVariations) {
     var variations = useDotTrick ? generateDotVariations(email) : [email];
